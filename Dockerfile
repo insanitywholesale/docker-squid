@@ -1,14 +1,17 @@
-FROM ubuntu:bionic-20190612
-LABEL maintainer="sameer@damagehead.com"
+FROM alpine:3.12
 
-ENV SQUID_VERSION=3.5.27 \
-    SQUID_CACHE_DIR=/var/spool/squid \
-    SQUID_LOG_DIR=/var/log/squid \
-    SQUID_USER=proxy
+ENV SQUID_VERSION=4.6 \
+	SQUID_CACHE_DIR=/var/spool/squid \
+	SQUID_LOG_DIR=/var/log/squid \
+	SQUID_USER=proxy
 
-RUN apt-get update \
- && DEBIAN_FRONTEND=noninteractive apt-get install -y squid=${SQUID_VERSION}* \
- && rm -rf /var/lib/apt/lists/*
+#idk what the difference between squid and acf-squid is
+#alpine wiki says to use acf-squid though
+#RUN apk add squid
+
+RUN apk add acf-squid
+
+RUN apk add bash
 
 COPY entrypoint.sh /sbin/entrypoint.sh
 RUN chmod 755 /sbin/entrypoint.sh
